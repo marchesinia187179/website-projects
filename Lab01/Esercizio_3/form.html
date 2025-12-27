@@ -6,27 +6,60 @@
 <body>
   <div>
     <h2>Registrazione Utente</h2>
-    <form >
+    <form action="https://httpbin.org/post" method="POST">
 
       <!-- Username -->
       <label for="username">Nome Utente:</label>
+      <input type="text" id="username" name="username" required>
+      <br>
 
       <!-- Password -->
       <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+      <br>
 
       <!-- Email -->
       <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      <br>
 
       <!-- Gender (Radio Button) -->
       <label>Genere:</label>
+      <input type="radio" id="maschio" name="genere" value="M">
+      <label for="maschio">Maschio</label>
 
+      <input type="radio" id="femmina" name="genere" value="F">
+      <label for="femmina">Femmina</label>
+
+      <input type="radio" id="altro" name="genere" value="Altro">
+      <label for="altro">Altro</label>
+      <br>
+      
       <!-- Interests (Checkbox) -->
-      <label>Interessi:</label>
+      <label>Interessi:</label><br>
+      <input type="checkbox" id="musica" name="interessi" value="musica">
+      <label for="musica">Musica</label><br>
 
+      <input type="checkbox" id="viaggi" name="interessi" value="viaggi">
+      <label for="viaggi">Viaggi</label><br>
+
+      <input type="checkbox" id="sport" name="interessi" value="sport">
+      <label for="sport">Sport</label><br>
+
+      <input type="checkbox" id="cultura" name="interessi" value="cultura">
+      <label for="cultura">Cultura</label><br>
 
       <!-- Country (Select Dropdown) -->
       <label for="country">Paese:</label>
-
+      <select id="paese" name="paese">
+        <option value="">-- Seleziona un paese --</option>
+        <option value="italia">Italia</option>
+        <option value="francia">Francia</option>
+        <option value="germania">Germania</option>
+        <option value="spagna">Spagna</option>
+        <option value="altro">Altro</option>
+      </select>
+      <br>
 
       <!-- Submit Button -->
       <button type="submit">Registrati</button>
