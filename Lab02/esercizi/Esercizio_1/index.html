@@ -1,23 +1,82 @@
 <!DOCTYPE html>
 <html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcolo Statistiche Voti</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Calcolo Statistiche Voti</title>
+    </head>
+    <body>
 
-<h1>Calcolo Statistiche sui Voti</h1>
+        <h1>Calcolo Statistiche sui Voti</h1>
 
-<!-- Input to insert votes -->
-<div>
-    <label for="grades">Inserisci i voti (18-33) separati da virgola:</label><br>
-    <input type="text" id="grades" placeholder="Esempio: 28,30,25"><br>
-    <button>Calcola Statistiche</button>
-</div>
+        <!-- Input to insert votes -->
+        <div>
+            <label for="grades">Inserisci i voti (18-30) separati da virgola:</label><br>
+            <input type="text" id="grades" placeholder="Esempio: 28,30,25"><br>
+            <button onclick="calculateResults()">Calcola Statistiche</button>
+        </div>
 
-<!-- Section to insert results -->
-<div class="result" id="results"></div>
+        <!-- Section to insert results -->
+        <div class="result" id="results">
+            <p id="votesEntered"></p><br>
+            <p id="minVote"></p><br>
+            <p id="maxVote"></p><br>
+            <p id="average"></p>
+        </div>
 
-</body>
+        <script>
+            function calculateResults() {
+                // Get the input and check if it is empty
+                const votes = document.getElementById('grades').value;
+                if (votes == 0) {
+                    window.alert("The input field can't be empty!");
+                    return;
+                }
+
+                // Creat an array of numbers taken from the input and split by ','
+                // We use .map and Number() to convert the strings into numbers
+                // .trim is used to remove any blank spaces
+                const votesArray = votes.split(",").map(v => Number(v.trim()));
+                let invalidVote = false;
+                votesArray.forEach(element => {
+                    if (isNaN(element) || element < 18 || element > 30) {
+                        invalidVote = true;
+                    }
+                });
+
+                if (invalidVote == true) {
+                    window.alert("Each vote must be a valid number between 18 and 30!");
+                    return;
+                }
+
+                let minVote = 30;
+                let maxVote = 18;
+                let sum = 0;
+
+                votesArray.forEach(element => {
+                    sum += element;
+
+                    if (element < minVote) {
+                        minVote = element;
+                    }
+
+                    if (element > maxVote) {
+                        maxVote = element;
+                    }
+                });
+
+                const average = sum / votesArray.length;
+
+                // .innerHTML is a property used to get or set the HTML content inside an element
+                document.getElementById('votesEntered').innerHTML = "Votes entered: " + votesArray.join(", ");
+                document.getElementById('minVote').innerHTML = "Minimum vote: " + minVote;                
+                document.getElementById('maxVote').innerHTML = "Maximum vote: " + maxVote;
+                document.getElementById('average').innerHTML = "Arithmetic average: " + average.toFixed(2);
+            
+                // If I would like to write the result in bold font I have to write
+                // document.getElementById('minVote').innerHTML = `Minimum vote: <span style="font-weight: bold;">${minVote}</span>`;
+            }
+        </script>
+
+    </body>
 </html>
