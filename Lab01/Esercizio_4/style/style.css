@@ -1,0 +1,99 @@
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+}
+
+.main {
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-navbar {
+    padding: 10px;
+    text-align: center;
+}
+
+.main-navbar-button,
+.form-button {
+    padding: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 100px;
+    border: solid;
+    border-radius: 100px;
+    border-color: green;
+    background-color: transparent;
+}
+
+.main-navbar-button:hover,
+.form-button:hover {
+    color: white;
+    background-color: green;
+    transition-duration: 0.2s;
+}
+
+.main-content {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.form {
+    flex: 1;
+    padding-top: 30px;
+    text-align: center;
+}
+
+.form-content {
+    margin: 10px;
+    align-items: center;
+}
+
+.form-name,
+.form-email,
+.form-object,
+.form-message,
+.search-bar {
+    padding: 10px;
+    width: 200px;
+    border-radius: 100px;
+    border: solid;
+    border-color: green;
+}
+
+.form-object,
+.form-message,
+.search-bar {
+    width: 430px;
+}
+
+.form-message {
+    border-radius: 18px;
+    height: 200px;
+}
+
+.arcticle-navbar {
+    text-align: center;
+}
+
+.article-card {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 18px;
+}
+
+.article-card:hover {
+    border: solid;
+    border-color: green;
+    transition-duration: 0.2s;
+}
+
+.header,
+.footer {
+    color: white;
+    text-align: center;
+    background-color: green;
+}
+

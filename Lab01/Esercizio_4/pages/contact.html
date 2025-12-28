@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>TechTalk Blog</title>
+        <link rel="stylesheet" href="../style/style.css">
+    </head>
+<body>
+
+    <div class="header">
+        <h1>TechTalk Blog</h1>
+    </div>
+
+    <div class="main">
+        <div class="main-navbar">
+            <button onclick="location.href='../index.html'" class="main-navbar-button">Home</button>
+            <button onclick="location.href='articles.html'" class="main-navbar-button">Articles</button>
+            <button onclick="location.href='contact.html'" class="main-navbar-button">Contact us</button>
+        </div>
+        <div class="form">
+            <form action="https://httpbin.org/get" method="get">
+
+                <!-- Name and Email -->
+                 <div class="form-content">
+                    <input class="form-name" type="text" id="name" name="name" placeholder="Name" required>
+                    <input class="form-email" type="email" id="email" name="email" placeholder="Email" required>
+                 </div>
+
+                <!-- Object -->
+                 <div class="form-content">
+                    <input class="form-object" type="text" id="object" name="object" placeholder="Object" required>
+                 </div>
+
+                <!-- Message -->
+                 <div class="form-content">
+                    <input class="form-message" type="text" id="message" name="message" placeholder="message" required>
+                 </div>
+
+                <!-- Submit -->
+                 <div>
+                    <input class="form-button" type="submit">
+                 </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 TechTalk Blog. Tutti i diritti riservati.</p>
+    </div>
+
+</body>
+</html>

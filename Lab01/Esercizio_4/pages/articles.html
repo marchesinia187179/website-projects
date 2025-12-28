@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>TechTalk Blog</title>
+        <link rel="stylesheet" href="../style/style.css">
+    </head>
+<body>
+
+    <div class="header">
+        <h1>TechTalk Blog</h1>
+    </div>
+
+    <div class="main">
+        <div class="main-navbar">
+            <button onclick="location.href='../index.html'" class="main-navbar-button">Home</button>
+            <button onclick="location.href='articles.html'" class="main-navbar-button">Articles</button>
+            <button onclick="location.href='contact.html'" class="main-navbar-button">Contact us</button>
+        </div>
+        <div class="main-content">
+            <header class="arcticle-navbar">
+                <h1>Articles</h1>
+                <input type="text" class="search-bar" id="searchBar" placeholder="Search by title..." onkeyup="filterArticles()">
+            </header>
+
+            <div class="article-list" id="articleList">
+                <article class="article-card">
+                    <h2>Introduction to HTML5</h2>
+                    <p>Learn the basis of HTML and how to build your first websites.</p>
+                </article>
+
+                <article class="article-card">
+                    <h2>Guide to modern CSS3</h2>
+                    <p>Everything you need to know about Flexbox, Grid e CSS variables to create responsive layouts.</p>
+                </article>
+
+                <article class="article-card">
+                    <h2>JavaScript for Beginners</h2>
+                    <p>Learn how to make your pages interective by adding logic and manipulating the DOM.</p>
+                </article>
+
+                <article class="article-card">
+                    <h2>Optimization SEO 2024</h2>
+                    <p>The best strategies to place your content at the top of search engine results.</p>
+                </article>
+            </div>
+
+            <div id="noResults" class="no-results" style="display: none;">
+                No items found with this title.
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 TechTalk Blog. Tutti i diritti riservati.</p>
+    </div>
+
+    <script>
+        function filterArticles() {
+            const input = document.getElementById('searchBar');
+            const filter = input.value.toLowerCase();
+            const list = document.getElementById('articleList');
+            const articles = list.getElementsByClassName('article-card');
+            const noResults = document.getElementById('noResults');
+            let found = false;
+
+            for (let i = 0; i < articles.length; i++) {
+                let title = articles[i].getElementsByTagName('h2')[0];
+                let txtValue = title.textContent || title.innerText;
+
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    articles[i].style.display = "";
+                    found = true;
+                } else {
+                    articles[i].style.display = "none";
+                }
+            }
+
+            // Show the message if there aren't results
+            noResults.style.display = found ? "none" : "block";
+        }
+    </script>
+
+</body>
+</html>
