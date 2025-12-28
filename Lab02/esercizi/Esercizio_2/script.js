@@ -9,11 +9,11 @@ const arr = [
         title: "Intelligenza Artificiale",
         description: "Nel suo significato più ampio, è la capacità di un sistema artificiale di simulare l'intelligenza umana attraverso l'ottimizzazione di funzioni matematiche.",
     },
-    /*{
+    {
         url: "https://png.pngtree.com/background/20230525/original/pngtree-floral-wallpaper-with-brown-and-brown-paint-picture-image_2735082.jpg",
         title: "Linguaggio dei fiori",
         description: "Modo di comunicazione ottocentesco per cui i fiori e gli allestimenti floreali venivano utilizzati per esprimere sensazioni che non sempre potevano essere pronunciate.",
-    }*/
+    }
 ];
 
 
@@ -23,22 +23,36 @@ function createCard(data) {
     card.className = "bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow";
 
     // Create the image element
+    let image = document.createElement("img");
+    image.src = data.url;
+    image.className = "w-full h-48 object-cover";
     
     // Append the image to Card div
+    card.appendChild(image);
 
     // Div for the title and the paragraph (textcontainer)
+    var textcontainer = document.createElement("div");
+    textcontainer.className = "p-6 text-center";
     
     // Create the title element
+    let title = document.createElement("h3");
+    title.innerHTML = data.title;
+    title.className = "font-semibold text-gray-800 text-xl mb-3";
     
     // Append the title to the textcontainer div
+    textcontainer.appendChild(title);
 
     // Create the description element
-    
+    let description = document.createElement("p");
+    description.innerHTML = data.description;
+    description.className = "text-gray-600 leading-relaxed";
+
     // Append the paragraph to the textcontainer div
+    textcontainer.appendChild(description);
 
     // Append the textcontainer to the Card div
+    card.appendChild(textcontainer);
    
     // Append the created card to the container
     document.getElementById("container").appendChild(card);
-    
 }
