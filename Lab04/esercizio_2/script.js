@@ -43,11 +43,15 @@ registrationForm.addEventListener('submit', function(event) {
     };
 
     // Use the Fetch API to make the POST request
-    fetch("https://httpbin.org/post", {
+    fetch("https://httpbin.org/post", {    // Start the network request to the specified URL
+        // Specify the HTTP method as POST to send data to the server
         method: "POST",
+        // Define metadata for the request
         headers: {
+            // Inform the server that the data being sent is in JSON format
             "Content-Type": "application/json"
         },
+        // Convert the JavaScript object 'params' into a JSON string for transmission
         body: JSON.stringify(params)
     })
     .then(response => {
@@ -85,3 +89,4 @@ registrationForm.addEventListener('submit', function(event) {
 
     });
   });
+
