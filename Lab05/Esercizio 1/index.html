@@ -17,9 +17,9 @@
       <div id="root"></div>
 
       <script type="text/babel" data-type="module">
+
         import React, { useState } from "react";
         import { createRoot } from "react-dom/client";
-
 
         let images = [
                 { src: 'https://www.armandoalpantheon.it/wp-content/uploads/2023/03/Primavera-a-Roma-%E2%80%93-Il-Colosseo-e-gli-scavi-di-Ostia-Antica-armando-al-pantheon-768x480.jpg', title: 'Colosseo' },
@@ -28,7 +28,52 @@
             ]
 
         const root = createRoot(document.getElementById("root"));
-        
+
+        function ImageComponent(props) {
+            return (
+                <div style={{ flex: 1, padding: '10px' }}>
+                    <img src={props.url} alt={props.title} />
+                    <h1>{props.title}</h1>
+                </div>
+            );
+        }
+
+        function Gallery() {
+            // Inizializziamo lo stato con l'array 'images' definito sopra
+            const [list, setList] = useState(images);
+
+            const addImage = () => {
+                // Chiediamo l'input all'utente
+                const newUrl = prompt("Inserisci l'URL dell'immagine:");
+                const newTitle = prompt("Inserisci il titolo dell'immagine:");
+
+                // Verifichiamo che l'utente non abbia annullato o lasciato vuoto
+                if (newUrl && newTitle) {
+                    const newImage = { src: newUrl, title: newTitle };
+                    
+                    // AGGIORNAMENTO STATO: Creiamo un nuovo array che contiene 
+                    // i vecchi elementi più quello nuovo
+                    setList([...list, newImage]);
+                }
+            };
+
+            return (
+                <div>
+                    <div style={{ display: "flex" }}>
+                        {list.map((item, index) => (
+                            <ImageComponent key={index} url={item.src} title={item.title} />
+                        ))}
+                    </div>
+
+                    <button onClick={addImage} style={{ marginBottom: '20px', padding: '10px 20px' }}>
+                        Aggiungi Immagine
+                    </button>
+                </div>
+            );
+        }
+
+        root.render(<Gallery/>);
+
       </script>
   </body>
 </html>
