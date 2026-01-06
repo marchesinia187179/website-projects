@@ -66,6 +66,31 @@
       const [products, setProducts] = React.useState([]);
 
 
+      // Load products on mount
+      React.useEffect(() => {
+        fetch(apiUrl)
+        .then((res) => {
+            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            return res.json();
+        })
+        .then((data) => setProducts(data.slice(0, 5)))
+        .catch((err) => console.error("Error loading products:", err));
+      }, []);
+
+      /*
+      fetch(apiUrl)
+      .then(response => {
+        if (!response) throw new Error(`HTTP error! status: ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        setProducts(data);
+      })
+      .catch(error => {
+        console.log("Error: " + error);
+      })
+      */
+
       return (
           <div className="p-6 space-y-6">
               <h1 className="text-2xl font-bold">Products</h1>
