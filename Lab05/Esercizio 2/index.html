@@ -36,11 +36,47 @@
             const [responseColor, setResponseColor] = useState("");
 
             const handleChange = (e) => {
-                
+                const { name, value, type, checked } = e.target;
+
+                if (type === "checkbox") {
+                    setFormData((prev) => {
+                        const updatedInterests = checked
+                        ? [...prev.interests, value]
+                        : prev.interests.filter((i) => i !== value);
+                        return { ...prev, interests: updatedInterests };
+                    });
+                } else {
+                    // Gestione standard per text, password, email, radio e select
+                    setFormData((prev) => ({
+                        ...prev,
+                        [name]: value,
+                    }));
+                }
             };
 
             const handleSubmit = async (e) => {
-                e.preventDefault();
+                e.preventDefault();     // Previene il reload della pagina
+
+                try {
+                    const response = await fetch("https://httpbin.org/post", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(formData),
+                    });
+
+                    if (!response.ok) throw new Error("Network error");
+
+                    const result = await response.json();
+                    const data = JSON.parse(result.data);
+
+                    setResponseMsg(`Utente ${data.username} creato!`);
+                    setResponseColor("green");
+                } 
+                catch (error) {
+                    setResponseMsg("Errore durante l'invio dei dati.");
+                    setResponseColor("red");
+                    console.error(error);
+                }
 
             };
 
