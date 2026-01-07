@@ -14,6 +14,12 @@ def load_products():
             products.append(row)
     return products
 
+
+@app.route('/')
+def root():
+    return index_react()
+
+
 @app.route('/products')
 def index_react():
     return render_template('index_react.html')
