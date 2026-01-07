@@ -10,29 +10,35 @@
       font-family: Arial, sans-serif;
       padding: 20px;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 20px;
     }
+
     th, td {
       border: 1px solid #aaa;
       padding: 8px;
       text-align: left;
     }
+
     th {
       background-color: #eee;
     }
+
     form label {
       display: block;
       margin: 8px 0;
     }
+
     form input, form textarea {
       width: 100%;
       padding: 6px;
       margin-top: 4px;
       box-sizing: border-box;
     }
+
     form button {
       margin-top: 10px;
       padding: 8px 12px;
@@ -41,6 +47,7 @@
     .errorDiv{
       color: red
     }
+
   </style><!-- Import map per risolvere i moduli -->
   <script type="importmap">
     {
@@ -51,6 +58,7 @@
         "react-router": "https://esm.sh/react-router@7?dev"
       }
     }
+
   </script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
@@ -62,23 +70,45 @@
     import { createRoot } from "react-dom/client";
     
     import {
-            BrowserRouter,
-            Routes,
-            Route,
-            Link,
-            useParams
-        } from "react-router-dom";
+      BrowserRouter,
+      Routes,
+      Route,
+      Link,
+      useParams
+    } from "react-router-dom";
 
 
     function ProductDetail(){
-       
-    }
-    
+      const params = useParams();
+      const productCode = params.productCode;
+      const [productData, setProductData] = React.useState(null);
 
+      React.useEffect(() => {
+        fetch(`/api/products/${productCode}`)
+          .then(r => r.json())
+          .then(data => setProductData(data))
+          .catch(error => console.error("Errore nel recuperare i dettagli del prodotto:", error));
+      }, [productCode]);
+
+      return (
+        productData ?
+          <div className="p-6 space-y-6">
+            <h2 className="text-2xl font-bold">Product Detail</h2>
+            <div><strong>ID:</strong> {productCode}</div>
+            <div><strong>Title:</strong> {productData.title}</div>
+            <div><strong>Price:</strong> {productData.price}</div>
+            <div><strong>Description:</strong> {productData.description}</div>
+            <div><Link to="/products">Back to Products List</Link></div>
+          </div> 
+        : <h1>Nessun prodotto disponibile</h1>
+      );
+
+    }
+
+    
     function ProductsTable() {
       const [products, setProducts] = React.useState([]);
 
-      
       React.useEffect(() => {
         fetch("/api/products")
         .then((res) => {
@@ -89,46 +119,50 @@
         .catch((err) => console.error("Error loading products:", err));
       }, []);
 
-
       return (
-          <div className="p-6 space-y-6">
-              <h1 className="text-2xl font-bold">Products</h1>
+        <div className="p-6 space-y-6">
+          <h1 className="text-2xl font-bold">Products</h1>
 
-
-              <table className="w-full border-collapse border border-gray-400">
-                <thead>
-                  <tr className="bg-gray-200">
-                    <th className="border border-gray-400 p-2">ID</th>
-                    <th className="border border-gray-400 p-2">Title</th>
-                    <th className="border border-gray-400 p-2">Price</th>
-                  </tr>
-                </thead>
-                  <tbody>
-                  {products.map((p) => (
-                    <tr key={p.product_code}>
-                        <td className="border p-2">{p.product_code}</td>
-                        <td className="border p-2">{p.title}</td>
-                        <td className="border p-2">{p.price}</td>
-                    </tr>
-                    ))}
-                  </tbody>
-              </table>
-          </div>
+          <table className="w-full border-collapse border border-gray-400">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border border-gray-400 p-2">ID</th>
+                <th className="border border-gray-400 p-2">Title</th>
+                <th className="border border-gray-400 p-2">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((p) => (
+                <tr key={p.product_code}>
+                  <td className="border p-2"><Link to={`/products/${p.product_code}`}>{p.product_code}</Link></td>
+                  <td className="border p-2"><Link to={`/products/${p.product_code}`}>{p.title}</Link></td>
+                  <td className="border p-2"><Link to={`/products/${p.product_code}`}>{p.price}</Link></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       );
+
     }
 
+    
     function App() {
-            return (
-            <BrowserRouter>
-              <Routes>
-                <Route path="/products" element={<ProductsTable />} />
-              </Routes>
-            </BrowserRouter>
-            );
+      return (
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<ProductsTable />} />
+            <Route path="/products" element={<ProductsTable />} />
+            <Route path="/products/:productCode" element={<ProductDetail />} />
+          </Routes>
+        </BrowserRouter>
+      );
     }
 
     const root = createRoot(document.getElementById("root"));
     root.render(<App />);
+
   </script>
+
 </body>
 </html>
