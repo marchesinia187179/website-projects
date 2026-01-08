@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Biblioteca{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="nav-brand">
+                <i class="fas fa-book"></i> Biblioteca
+            </a>
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('index') }}">Lista Libri</a></li>
+                <li><a href="{{ url_for('react_app') }}">React App</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Biblioteca - Sistema di Gestione Libri</p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

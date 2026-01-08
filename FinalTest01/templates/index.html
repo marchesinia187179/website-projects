@@ -1,0 +1,41 @@
+<!-- ESERCIZIO #2 -->
+<!-- Template che estende base.html per visualizzare la lista dei libri -->
+{% extends "base.html" %}
+
+{% block title %}Biblioteca - Lista Libri{% endblock %}
+
+{% block content %}
+    <h1>Elenco Libri</h1>
+    
+    <!-- Visualizzazione tabella libri o messaggio se vuota -->
+    {% if books %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Codice</th>
+                    <th>Titolo</th>
+                    <th>Autore</th>
+                    <th>Anno</th>
+                    <th>Genere</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <!-- ESERCIZIO #3 -->
+                    <!-- Rende cliccabile il codice libro per navigare ai dettagli -->
+                    <td><a href="{{ url_for('book_detail', codice_libro=book.code) }}" class="book-link">{{ book.code }}</a></td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.year }}</td>
+                    <td>{{ book.genre }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="no-books">
+            <h2>Nessun libro trovato</h2>
+        </div>
+    {% endif %}
+{% endblock %}

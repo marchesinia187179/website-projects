@@ -1,0 +1,62 @@
+<!-- ESERCIZIO #3 e #4 -->
+<!-- Template che estende base.html per visualizzare i dettagli del libro -->
+{% extends "base.html" %}
+
+{% block title %}{{ book.title if book else 'Libro non trovato' }} - Biblioteca{% endblock %}
+
+{% block content %}
+    <a href="{{ url_for('index') }}" class="back-link">← Torna alla lista</a>
+    
+    <!-- ESERCIZIO #3 -->
+    <!-- Visualizzazione dettagli libro -->
+    {% if book %}
+        <div class="book-details">
+            <h1>{{ book.title }}</h1>
+            
+            <div class="detail-row">
+                <div class="detail-label">Codice:</div>
+                <div class="detail-value">{{ book.code }}</div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Autore:</div>
+                <div class="detail-value">{{ book.author }}</div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Anno:</div>
+                <div class="detail-value">{{ book.year }}</div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Genere:</div>
+                <div class="detail-value">{{ book.genre }}</div>
+            </div>
+        </div>
+        
+        <!-- ESERCIZIO #4 -->
+        <!-- Form per inserimento recensione -->
+        <div class="review-form">
+            <h2>Aggiungi una Recensione</h2>
+            <form method="POST" action="{{ url_for('add_review', codice_libro=book.code) }}">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required placeholder="Inserisci il tuo username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="text">Recensione:</label>
+                    <textarea id="text" name="text" required placeholder="Scrivi la tua recensione..."></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Invia Recensione</button>
+            </form>
+        </div>
+        
+    {% else %}
+        <div class="book-details">
+            <h1>Libro non trovato</h1>
+            <p>Il libro richiesto non è presente nel database.</p>
+        </div>
+    {% endif %}
+{% endblock %}
