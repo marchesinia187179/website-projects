@@ -11,3 +11,6 @@ The course is made in Italian so the exercises are impemented in Italian, even i
 - [Lab02](https://github.com/marchesinia187179/website-projects/tree/b46599b2ca401e9e9b3ad83577f6c559e4ffe87a/Lab02): JAVASCRIPT and DOM MANIPULATION
 - [Lab03](https://github.com/marchesinia187179/website-projects/tree/d9d40eef687b4a804de64c1b98c58584e73c1ac2/Lab03): JAVASCRIPT and FORM
 - [Lab04](https://github.com/marchesinia187179/website-projects/tree/f8c257e37e13c43f69add806089192fadd7654df/Lab04): AJAX and FETCH API
+
+### Attention!
+To test each website, you need to open the specified folder in your IDE. If you try to open it from the root directory and not from the specified folder, it won't work.
