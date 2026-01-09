@@ -1,4 +1,4 @@
-## AJAX and FETCH API
+## AJAX and FETCH API
 
 ### Exercise 1 - Posts upload
 External javascript, internal css, fetch GET request and DOM manipulation.
