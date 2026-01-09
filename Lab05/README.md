@@ -1,4 +1,4 @@
-## REACT
+## REACT, FORM and SERVER REQUESTS
 
 ### Exercise 1 - REACT with props & state
 Internal javascript, objects manipulation, promt function and React props & state.
