@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flask React SPA</title>
+
+  <!-- Import map per risolvere i moduli -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19?dev",
+        "react-dom/client": "https://esm.sh/react-dom@19/client?dev",
+        "react-router-dom": "https://esm.sh/react-router-dom@7?dev",
+        "react-router": "https://esm.sh/react-router@7?dev"
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-type="module">
+    import React from "react";
+    import { createRoot } from "react-dom/client";
+    import {
+      BrowserRouter,
+      Routes,
+      Route,
+      Link,
+      useParams,
+      Navigate,
+      useNavigate
+    } from "react-router-dom";
+
+    const { useState, useEffect } = React;
+
+    // ESERCIZIO #6
+    // Componente EventList per visualizzare la lista degli eventi con form per prenotare
+    function EventList() {
+      const [events, setEvents] = useState([]);
+      const [loading, setLoading] = useState(true);
+
+      // Eseguito al montaggio del componente: recupera i dati dal server Flask
+      useEffect(() => {
+        fetchEvents();
+      }, []);
+
+      // Esegue una richiesta asincrona fetch di tipo GET per recuperare gli eventi chiamando l'endpoint '/api/events' su flask
+      const fetchEvents = async () => {
+        try {
+          const response = await fetch('/api/events');
+          const data = await response.json();
+          setEvents(data);
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          console.error('Errore nel caricamento degli eventi:', error);
+        }
+      };
+
+      // ESERCIZIO #7 
+      // Gestione della prenotazione con richiesta di conferma
+      // Esegue una richiesta asincrona fetch di tipo POST per prenotare un posto chiamando l'endpoint '/api/book/<code>' su flask
+      const handleSubmit = async (code) => {
+        // Richiesta di conferma della prenotazione
+        if (!window.confirm(`Vuoi confermare per l'evento ${code}?`)) {
+          return;
+        }
+
+        try {
+          const response = await fetch(`/api/book/${code}`, {
+            method: 'POST'
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            alert("Prenotazione effettuata!");
+            fetchEvents();    // Ricarica i dati per aggiornare i numeri di posti liberi nella tabella
+          } else {
+            alert("Errore: " + result.message);
+          }
+        } catch (error) {
+          console.error("Errore durante la prenotazione:", error);
+        }
+      }
+
+      // Visualizzazione condizionale durante il fetch dei dati per evitare di caricare html vuoti
+      if (loading) return <div>Caricamento degli eventi...</div>;
+
+      return (
+        <div>
+          <h1>Eventi sportivi - Applicazione React</h1>
+
+          {/* Tabella degli eventi */}
+          <div>
+            <h2>Elenco eventi sportivi | <a href="{{ url_for('index') }}">Home</a></h2>
+
+            {events.length > 0 ? (
+              <table>
+                <thead>
+                  <tr>
+                    <th>Codice</th>
+                    <th>Nome</th>
+                    <th>Sport</th>
+                    <th>Data</th>
+                    <th>Luogo</th>
+                    <th>Posti liberi</th>
+                    <th>Prenota posto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* Mapping: trasforma l'array di oggetti 'events' in righe <tr> della tabella */}
+                  {events.map((event) => (
+                    <tr key={event.code}>
+                      <td>{ event.code }</td>
+                      <td><Link to={`/event/${event.code}`}>{ event.name }</Link></td>
+                      <td>{ event.sport }</td>
+                      <td>{ event.date }</td>
+                      <td>{ event.place }</td>
+                      <td>{ event.available_places }</td>
+                      <td>
+                        {/* ESERCIZIO #7 Pulsante per la prenotazione */}
+                        {/* Il pulsante chiama handleSubmit passando il codice dell'evento corrente */}
+                        <button onClick={() => handleSubmit(event.code)}>Prenota</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div>Nessun evento trovato</div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // ESERCIZIO #8
+    // Componente EventDetail per visualizzare i dettagli dell'evento
+    function EventDetail() {
+      const { id } = useParams();   // Estrae il parametro 'id' dall'URL (es: /react/event/E001)
+      const navigate = useNavigate();   // Hook per navigare programmaticamente (es: dopo un click)
+      const [event, setEvent] = useState(null);
+      const [loading, setLoading] = useState(true);
+
+      // Recupera tutti gli eventi e trova quello corrispondente all'id nell'URL
+      useEffect(() => {
+        fetch('/api/events')
+          .then(res => res.json())
+          .then(data => {
+            const found = data.find(e => e.code === id);
+            setEvent(found);
+            setLoading(false);
+          })
+          .catch(error => {
+            setLoading(false);
+            console.error('Errore nel caricamento degli eventi:', error);
+          });
+      }, [id]);
+
+      // Visualizzazione condizionale durante il fetch dei dati per evitare di caricare html vuoti
+      if (loading) return <div>Caricamento dell'evento...</div>;
+
+      if (!event) {
+        return (
+          <div>
+            <div>Evento non trovato</div>
+            <Link to="/">Torna alla lista</Link>
+          </div>
+        );
+      }
+
+      return (
+        <div>
+          {/* Dettagli del evento */}
+          {/* navigate("/") riporta l'utente alla rotta principale del basename (/react) */}
+          <button onClick={() => navigate("/")}>Torna alla lista</button>
+          <h1>{ event.name }</h1>
+
+          <div>Codice: { event.code }</div>
+          <div>Nome: { event.name }</div>
+          <div>Sport: { event.sport }</div>
+          <div>Data: { event.date }</div>
+          <div>Luogo: { event.place }</div>
+          <div>Posti liberi: { event.available_places }</div>
+        </div>
+      );
+    }
+
+    // Componente principale: gestione del routing
+    function App(props) {
+      return (
+        /* basename="/react": dice a React Router che l'app gira sotto la sottocartella /react gestita da Flask */
+        <BrowserRouter basename="/react">
+          <Routes>
+            <Route path="/" element={<EventList />} />
+            <Route path="/event/:id" element={<EventDetail />} />
+            
+            {/* Fallback se l'URL è sbagliato */}
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </BrowserRouter>
+      );
+    }
+
+    // Renderizza l'applicazione
+    const root = createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

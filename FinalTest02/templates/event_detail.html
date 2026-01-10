@@ -1,0 +1,47 @@
+<!-- ESERCIZIO #3 e #4 -->
+<!-- Template che estende base.html per visualizzare i dettagli del evento -->
+{% extends "base.html" %}
+
+{% block title %}{{ event.neme if event else 'Evento non trovato' }}{% endblock %}
+
+{% block content %}
+    <a href="{{ url_for('index') }}">Torna alla lista</a>
+    
+    <!-- ESERCIZIO #3 -->
+    <!-- Visualizzazione dettagli evento -->
+    {% if event %}
+        <div>
+            <h1>{{ event.name }}</h1>
+
+            <div>Codice: {{ event.code }}</div>
+            <div>Nome: {{ event.name }}</div>
+            <div>Sport: {{ event.sport }}</div>
+            <div>Data: {{ event.date }}</div>
+            <div>Luogo: {{ event.place }}</div>
+            <div>Posti liberi: {{ event.available_places }}</div>
+        </div>
+
+
+        <!-- ESERCIZIO #4 -->
+        <!-- Form per prenotazione posto -->
+        <div>
+            <h2>Prenota posto</h2>
+            <form method="POST" action="{{ url_for('book_place', code=event.code) }}">
+                <button type="submit">Prenota</button>
+            </form>
+        </div>
+    {% else %}
+        <div>
+            <h1>Evento non trovato</h1>
+            <p>L'evento richiesto non è presente nel database.</p>
+        </div>
+    {% endif %}
+
+    <!-- ESERCIZIO #5 -->
+    <!-- Messaggio di errore se non ci sono posti disponibili e si vuole prenotare -->
+    {% if alert %}
+        <div>
+            <p>{{ alert }}</p>
+        </div>
+    {% endif %}
+{% endblock %}

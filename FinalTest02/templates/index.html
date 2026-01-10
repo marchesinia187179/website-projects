@@ -1,0 +1,43 @@
+<!-- ESERCIZIO #2 -->
+<!-- Template che estende base.html per visualizzare la lista degli eventi sportivi -->
+{% extends 'base.html' %}
+
+{% block title %}Eventi sportivi{% endblock %}
+
+{% block content %}
+<h2>Elenco degli eventi | <a href="{{ url_for('react_app') }}">React app</a></h2>
+
+<!-- Visualizzazione tabella eventi o messaggio se non ci sono -->
+{% if events %}
+    <table>
+        <thead>
+            <tr>
+                <th>Codice</th>
+                <th>Nome</th>
+                <th>Sport</th>
+                <th>Data</th>
+                <th>Luogo</th>
+                <th>Posti liberi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr>
+                <!-- ESERCIZIO #3 -->
+                <!-- Rende cliccabile ogni riga per navigare ai dettagli -->
+                <td><a href="{{ url_for('event_detail', code=event.code) }}">{{ event.code }}</a></td>
+                <td><a href="{{ url_for('event_detail', code=event.code) }}">{{ event.name }}</a></td>
+                <td><a href="{{ url_for('event_detail', code=event.code) }}">{{ event.sport }}</a></td>
+                <td><a href="{{ url_for('event_detail', code=event.code) }}">{{ event.date }}</a></td>
+                <td><a href="{{ url_for('event_detail', code=event.code) }}">{{ event.place }}</a></td>
+                <td><a href="{{ url_for('event_detail', code=event.code) }}">{{ event.available_places }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div>
+        <h2>Nessun evento disponibile</h2>
+    </div>
+{% endif %}
+{% endblock %}
