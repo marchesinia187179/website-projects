@@ -3,24 +3,22 @@
 ![Page 2](https://github.com/marchesinia187179/website-projects/blob/ee7cf5a329e1b15386a37cb115237dd1b2815570/FinalTest01/images/page2.png)
 ![Page 3](https://github.com/marchesinia187179/website-projects/blob/ee7cf5a329e1b15386a37cb115237dd1b2815570/FinalTest01/images/page3.png)
 ## Description
-1. Scrivere due funzioni per leggere e restituire:
-   - tutti i libri presenti nel file `library.csv`
-   - tutte le recensioni presenti nel file `reviews.csv`
+1. Write two functions to read and return:
+   - all books present in the `library.csv` file.
+   - all reviews present in the `reviews.csv` file.
 
-   N.B. Le funzioni devono essere richiamate, dove necessario in `app.py` per ottenere l'elenco dei libri e delle recensioni. Il caricamento dei file deve essere implementato in un'unica parte del codice.
+   Note: These functions must be called where necessary in `app.py` to retrieve the list of books and reviews. File loading must be implemented in a single part of the code.
 
-2. Visualizzare in `index.html` una tabella contenente l’elenco dei libri, se presenti.
-   Se il file è vuoto o mancante, mostrare "Nessun libro trovato".
-   
-3. Rendere cliccabile ogni libro e renderizzare ad una pagina di dettaglio del libro con una route dinamica con il codice del prodotto (es. `/libro/<codice_libro>`) e visualizzare una pagina con i dettagli del libro formattati in modo pulito.
+2. Display a table in `index.html` containing the list of books, if present. If the file is empty or missing, display the message "Nessun libro trovato" (No books found).
 
-4. Nella pagina di dettaglio, inserire un form sotto i dettagli del libro per l’inserimento di una recensione. Il codice della nuova recensione deve essere
-generato lato backend. La nuova recensione sovra essere memorizzata nel file `reviews.csv`.
+3. Make each book clickable and render a book detail page using a dynamic route with the product code (e.g., `/libro/<book_code>`). Display a page with the book details in a clean format.
 
-5. Crea due API:
-   - una API per ritornare tutti i libri inseriti
-   - una per tutte le recensioni associate al singolo libro in base al codice_libro passato nell’url
+4. On the detail page, insert a form below the book details to submit a review. The code for the new review must be generated on the backend. The new review must be stored in the `reviews.csv` file.
 
-6. Nel template `index_react.html`, creare una componente React BookList per renderizzare una tabella dei libri analoga quella del punto 2. Sopra la tabella deve essere inserito un form per l'aggiunta di un libro. Associare questa componente alla route `/react`.
+5. Create two APIs:
+   - One API to return all entered books.
+   - One API to return all reviews associated with a single book based on the book code passed in the URL.
 
-7. Rendere cliccabile il codice libro di ogni tabella per navigare verso la route `/react/book/:id`. Tale root deve essere associata a una componente BookDetail che mostri i dettagli del libro in maniera simile alla pagina del punto 3. Sotto i dettagli del libro, devono essere mostrate anche le recensioni associate ad esso.
+6. In the `index_react.html` template, create a React component `BookList` to render a table of books similar to the one in point 2. A form for adding a book must be inserted above the table. Associate this component with the `/react` route.
+
+7. Make the book code in each table clickable to navigate to the `/react/book/:id` route. This route must be associated with a `BookDetail` component that shows the book details similarly to the page in point 3. Below the book details, the reviews associated with it must also be displayed.
