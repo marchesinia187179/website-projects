@@ -1,0 +1,52 @@
+<!-- 
+    ESERCIZIO #2
+    Il file deve estendere il template di base. 
+    Il template deve mostrare una tabella con l'elenco dei prodotti disponibili. 
+    Se non ci sono prodotti, visualizzare il messaggio “Nessun prodotto disponibile”.
+    Nella tabella deve essere riportato solo 
+    - il nome del prodotto, 
+    - il prezzo
+    - e la dicitura “Esaurito” in una colonna a parte nel caso il prodotto non sia disponibile.
+-->
+
+{% extends "base.html" %}
+
+{% block title %}Prodotti{% endblock %}
+
+{% block content %}
+<h2>Elenco prodotti | <a href="{{ url_for('react_app') }}">React</a></h2>
+
+{% if products %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nome prodotto</th>
+                <th>Prezzo</th>
+                <th>Disponibilità</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <!--
+                    ESERCIZIO #3
+                    Rendere cliccabile il nome di ogni prodotto nella tabella. 
+                    Quando un utente clicca su un prodotto, reindirizzarlo a una pagina dedicata
+                -->
+                <td><a href="{{ url_for('product_detail', product_code=product.codice_prodotto) }}">{{ product.nome_prodotto }}</a></td>
+                <td>{{ product.prezzo }}</td>
+                {% if product.disponibilita > '0' %}
+                    <td>{{ product.disponibilita }}</td>
+                {% else %}
+                    <td>Esaurito</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div>
+        <h2>Nessun prodotto disponibile</h2>
+    </div>
+{% endif %}
+{% endblock %}

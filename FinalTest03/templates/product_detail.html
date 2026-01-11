@@ -1,0 +1,49 @@
+<!-- 
+    ESERCIZIO #3
+    Deve mostrare i dettagli del prodotto corrispondente, formattati in modo chiaro e leggibile.
+    Nella pagina di dettaglio devono essere presenti tutte le informazioni del prodotto.
+    Inoltre, inserire nella pagina di dettaglio un pulsante per tornare a index.html.
+-->
+
+{% extends "base.html" %}
+
+{% block title %}{{ product.nome_prodotto }}{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('index') }}">Torna alla lista</a>
+
+{% if product %}
+    <div>
+        <h1>{{ product.name }}</h1>
+
+        <div><strong>Codice:</strong> {{ product.codice_prodotto }}</div>
+        <div><strong>Nome:</strong> {{ product.nome_prodotto }}</div>
+        <div><strong>Categoria:</strong> {{ product.categoria }}</div>
+        <div><strong>Prezzo:</strong> {{ product.prezzo }}</div>
+        <div><strong>Disponibilita:</strong> {{ product.disponibilita }}</div>
+        <div><strong>Descrizione:</strong> {{ product.descrizione }}</div>
+    </div>
+
+    <!-- 
+        ESERCIZIO #4
+        Nella pagina del prodotto, aggiungere un pulsante per acquistare il prodotto.
+        Il pulsante deve chiamare un’API Flask /api/buy/<product_code> tramite il metodo POST.
+    -->
+    <div>
+        <form method="POST" action="{{ url_for('buy_product', product_code=product.codice_prodotto) }}">
+            <button type="submit">Acquista prodotto</button>
+        </form>
+    </div>
+{% else %}
+    <div>
+        <h1>Prodotto non trovato</h1>
+        <p>Il prodotto richiesto non è presente nel database.</p>
+    </div>
+{% endif %}
+
+{% if alert %}
+    <script>
+        alert("{{ alert }}");
+    </script>
+{% endif %}
+{% endblock %}

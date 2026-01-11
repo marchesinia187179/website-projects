@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flask React SPA</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19?dev",
+        "react-dom/client": "https://esm.sh/react-dom@19/client?dev",
+        "react-router-dom": "https://esm.sh/react-router-dom@7?dev",
+        "react-router": "https://esm.sh/react-router@7?dev"
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-type="module">
+    import React from "react";
+    import { createRoot } from "react-dom/client";
+    import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+    const { useState, useEffect } = React;
+
+    function ProductList() {
+      const [products, setProducts] = useState([]);
+      const [loading, setLoading] = useState(true);
+      // Stato per gestire il testo del filtro (ESERCIZIO #8)
+      const [filterText, setFilterText] = useState("");
+
+      // Funzione caricamento prodotti con supporto al filtro (ESERCIZIO #8)
+      const fetchProducts = async (query = "") => {
+        try {
+          // Passiamo il filtro come query parameter
+          const response = await fetch(`/api/products?name=${query}`);
+          const data = await response.json();
+          setProducts(data);
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          console.error('Errore nel caricamento:', error);
+        }
+      };
+
+      useEffect(() => { fetchProducts(); }, []);
+
+      // Gestore del form (ESERCIZIO #8)
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        fetchProducts(filterText);
+      };
+
+      if (loading) return <div>Caricamento dei prodotti...</div>;
+      
+      return (
+        <div>
+          <h1>Prodotti - Applicazione React</h1>
+          <div>
+            <h2>Elenco prodotti | <a href="{{ url_for('index') }}">Home</a></h2>
+
+            <h3>Cerca articolo</h3>
+            {/* FORM DI FILTRO (ESERCIZIO #8) */}
+            <form onSubmit={handleSubmit}>
+              <input 
+                type="text" 
+                value={filterText}
+                onChange={(e) => setFilterText(e.target.value)}
+                placeholder="Cerca per nome..." 
+              />
+              <button type="submit">Cerca</button>
+            </form>
+
+            <div>
+              { products.length > 0 ? (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nome prodotto</th>
+                      <th>Prezzo</th>
+                      <th>Disponibilità</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    { products.map((product) => (
+                        <tr key={product.codice_prodotto}>
+                            <td>{ product.nome_prodotto }</td>
+                            <td>{ product.prezzo }</td>
+                            <td>{ parseInt(product.disponibilita) > 0 ?
+                                  product.disponibilita : "Esaurito" }</td>
+                        </tr>
+                      ))
+                    }
+                  </tbody>
+                </table>
+                ) : (<div>Nessun prodotto trovato</div>)
+              }
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      return (
+        <BrowserRouter basename="/react">
+          <Routes>
+            <Route path="/" element={<ProductList />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </BrowserRouter>
+      );
+    }
+
+    const root = createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
