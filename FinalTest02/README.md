@@ -1,7 +1,10 @@
 # Final Test 02
 
-![Page 1]()
-![Page 2]()
+![Page 1](https://github.com/marchesinia187179/website-projects/blob/a779c6cac2f401359bed488f83edc045e1e9adc0/FinalTest02/images/page1.png)
+![Page 2](https://github.com/marchesinia187179/website-projects/blob/a779c6cac2f401359bed488f83edc045e1e9adc0/FinalTest02/images/page2.png)
+![React 1](https://github.com/marchesinia187179/website-projects/blob/a779c6cac2f401359bed488f83edc045e1e9adc0/FinalTest02/images/react1.png)
+![React 2](https://github.com/marchesinia187179/website-projects/blob/a779c6cac2f401359bed488f83edc045e1e9adc0/FinalTest02/images/react2.png)
+
 
 ## Description
 1. Write a function that returns all events present in the `events.csv` file. The file contains the following columns: event code, event name, sport, date, location, and available seats.
