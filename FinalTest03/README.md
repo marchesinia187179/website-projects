@@ -1,8 +1,8 @@
 # Final Test 03
 
-![Page 1]()
-![Page 2]()
-![React 1]()
+![Page 1](https://github.com/marchesinia187179/website-projects/blob/df28ab1a0b1a1f8f4c236cea925e8687310745b4/FinalTest03/images/page1.png)
+![Page 2](https://github.com/marchesinia187179/website-projects/blob/df28ab1a0b1a1f8f4c236cea925e8687310745b4/FinalTest03/images/page2.png)
+![React 1](https://github.com/marchesinia187179/website-projects/blob/df28ab1a0b1a1f8f4c236cea925e8687310745b4/FinalTest03/images/react1.png)
 
 ## Description
 1. Write a function to read and return all products from the `products.csv` file. The file includes columns for product code, name, category, price, availability, and description. This function must be called in `app.py` to retrieve the product list.
