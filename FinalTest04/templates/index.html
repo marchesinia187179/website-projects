@@ -1,0 +1,47 @@
+<!-- 
+    ESERCIZIO #2
+    Il file deve estendere il template di base. 
+    Il template deve mostrare una tabella con l'elenco dei video disponibili, 
+    con nome del video e numero di commenti associati al video.
+-->
+{% extends "base.html" %}
+
+{% block title %}Video{% endblock %}
+
+{% block content %}
+<h2>Elenco dei video disponibili | <a href="{{ url_for('react_app') }}">React</a></h2>
+
+{% if videos %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Numero commenti</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for video in videos %}
+            <tr>
+                <!--
+                    ESERCIZIO #3
+                    Rendere cliccabile il nome del video nella tabella. 
+                    Quando un utente clicca su un video, 
+                    - reindirizzarlo a una pagina dedicata /video/<video_code> che
+                    - mostri i dettagli del video corrispondente, formattati in modo chiaro e leggibile.
+                -->
+                <td>
+                    <a href="{{ url_for('video_detail', video_code=video.video_code) }}">
+                        {{ video.video_name }}
+                    </a>
+                </td>
+                <td>{{ video.num_comments }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div>
+        <h2>Nessun video disponibile</h2>
+    </div>
+{% endif %}
+{% endblock %}

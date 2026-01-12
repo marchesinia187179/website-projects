@@ -1,0 +1,38 @@
+<!--
+    ESERCIZIO #3
+    Nella pagina di dettaglio deve essere presente il video incorporato (embedded player)
+    - che può essere direttamente visualizzato dalla pagina, 
+    - insieme al nome del video e la lista dei commenti.
+    Inoltre, inserire nella pagina di dettaglio un pulsante per tornare a index.html.
+-->
+{% extends "base.html" %}
+
+{% block title %}Dettagli video{% endblock %}
+
+{% block content %}
+<button>
+    <a href="{{ url_for('index') }}">Torna alla lista</a>
+</button>
+
+<h2>Dettagli video</h2>
+
+{% if video %}
+    <div>
+        <h3>{{ video.video_name }}</h3>
+        <iframe width="420" height="315" src="{{video.video_link}}"></iframe>
+        <div>
+            <form method="POST" action="{{ url_for('add_comment', video_code=video.video_code) }}">
+                <textarea id="new_comment" name="new_comment" required></textarea>
+                <button type="submit">Aggiungi</button>
+            </form>
+        </div>
+        {% for comment in comments %}
+            <p>{{ comment }}</p>
+        {% endfor %}
+    </div>
+{% else %}
+    <div>
+        <h2>Nessun video disponibile</h2>
+    </div>
+{% endif %}
+{% endblock %}

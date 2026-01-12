@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flask React SPA</title>
+
+  <!--<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">-->
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19?dev",
+        "react-dom/client": "https://esm.sh/react-dom@19/client?dev",
+        "react-router-dom": "https://esm.sh/react-router-dom@7?dev",
+        "react-router": "https://esm.sh/react-router@7?dev"
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!--
+    ESERCIZIO #7
+    Creare una componente React VideoList per visualizzare 
+    l’elenco dei prodotti in una tabella che visualizzi codice e nome di ogni video.
+    Associarla alla route /react/videos.
+  -->
+  <script type="text/babel" data-type="module">
+    import React from "react";
+    import { createRoot } from "react-dom/client";
+    import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+    const { useState, useEffect } = React;
+
+    function VideoList() {
+      const [videos, setVideos] = useState([]);
+      const [loading, setLoading] = useState(true);
+      const [formData, setFormData] = useState({
+          name: '',
+          link: ''
+        });
+
+      const fetchVideos = async () => {
+        try {
+          const response = await fetch(`/api/videos`);
+          const data = await response.json();
+          setVideos(data);
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          console.error('Errore nel caricamento:', error);
+        }
+      };
+
+      useEffect(() => { fetchVideos(); }, []);
+
+      // Gestisce il cambiamento dei campi del form
+      const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+          ...prev,
+          [name]: value
+        }));
+      };
+
+      // Gestisce l'invio del form per aggiungere un video
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+          const response = await fetch(`/api/video/add_video`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json', // Specifica che invii JSON
+            },
+            body: JSON.stringify(formData) // Invia i dati del form!
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            alert("Video aggiunto!");
+            setFormData({ name: '', link: '' }); // Reset del form
+            fetchVideos();
+          } else {
+            alert("Errore: " + result.message);
+          }
+        } catch (error) {
+          console.error("Errore durante l'aggiunta del video:", error);
+        }
+      };
+
+      if (loading) return <div>Caricamento dei video...</div>;
+
+      return (
+        /* ESERCIZIO #8
+         * Inserire sopra la tabella un form per l’aggiunta di un nuovo video.
+         * Il form deve prendere in input un nome e il link del video. 
+         * Il codice deve essere generato automaticamente lato backend 
+         * all’interno di un’API Flask creata apposta per aggiungere il video nel file video.csv.
+        */
+        <div>
+          <h2>Elenco dei video disponibili | <a href="{{ url_for('index') }}">Home</a></h2>
+
+          { videos.length > 0 ? (
+            <div>
+              <div>
+                <form onSubmit={handleSubmit}>
+                  <div>
+                    <label>Nome</label>
+                    <input type="text" name="name" value={formData.name} onChange={handleInputChange} required />
+                  </div>
+
+                  <div>
+                    <label className="form-label">Link</label>
+                    <input type="text" name="link" value={formData.link} onChange={handleInputChange} required />
+                  </div>
+
+                  <button type="submit">Aggiungi video</button>
+                </form>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Codice</th>
+                    <th>Nome</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  { videos.map((video) => (
+                      <tr key={video.video_code}>
+                          <td>{ video.video_code }</td>
+                          <td>{ video.video_name }</td>
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </table>
+            </div>
+            ) : (<div>Nessun video trovato</div>)
+          }
+        </div>
+      );
+    }
+
+    function App() {
+      return (
+        <BrowserRouter basename="/react">
+          <Routes>
+            <Route path="/" element={<VideoList />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </BrowserRouter>
+      );
+    }
+
+    const root = createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
