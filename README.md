@@ -13,6 +13,7 @@ The course is made in Italian so the exercises are impemented in Italian, even i
 - [Lab04](https://github.com/marchesinia187179/website-projects/tree/f8c257e37e13c43f69add806089192fadd7654df/Lab04): AJAX and FETCH API
 - [Lab05](https://github.com/marchesinia187179/website-projects/tree/f5e707aad15876335b3c927effab2dec8e54d54c/Lab05): REACT, FORM and SERVER REQUESTS
 - [Lab06](https://github.com/marchesinia187179/website-projects/tree/a9ad83c7c5c8aa62953d696489e87948758eb654/Lab06): FLASK and REACT
+- [Lab07](https://github.com/marchesinia187179/website-projects/tree/99ada813374c11fe4999f9b6e22d5ab57b5e9f65/Lab07): All in one
 
 
 ### Attention!
