@@ -1,0 +1,49 @@
+<!--
+    ESERCIZIO #2
+    Deve estendere il template di base.
+    Il template deve mostrare una tabella con l'elenco dei videogiochi disponibili, 
+    visualizzando il nome del videogioco e la media delle valutazioni associate. 
+    Nel caso in cui il videogioco non abbia valutazioni, 
+    visualizzare il messaggio “nessuna valutazione disponibile”.
+-->
+{% extends "base.html" %}
+
+{% block title %}Videogames{% endblock %}
+
+{% block content %}
+<h2>Elenco dei videogames disponibili | <a href="{{ url_for('react_app') }}">React</a></h2>
+
+{% if videogames %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Media valutazioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for videogame in videogames %}
+            <tr>
+                <!--
+                    ESERCIZIO #3
+                    Rendere cliccabile il nome del videogioco nella tabella. 
+                    Quando un utente clicca su un videogioco, 
+                    reindirizzarlo a una pagina dedicata /videogame/<game_code> che 
+                    mostri i dettagli del videogioco corrispondente
+                -->
+                <td>
+                    <a href="{{ url_for('videogame_detail', game_code=videogame.code) }}">
+                        {{ videogame.name }}
+                    </a>
+                </td>
+                <td>{{ videogame.avarage_rating }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div>
+        <h2>Nessun videogame disponibile</h2>
+    </div>
+{% endif %}
+{% endblock %}

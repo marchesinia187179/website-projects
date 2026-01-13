@@ -1,0 +1,177 @@
+<!--
+  ESERCIZIO #7
+  Creare un componente React VideogameList 
+  per visualizzare l'elenco dei videogiochi in una tabella che mostri 
+  il codice e il nome di ogni videogioco. 
+  Associare questo componente alla route /react/videogames.
+
+  ESERCIZIO #8
+  Nel componente VideogameList, 
+  inserire sopra la tabella un form per l'aggiunta di un nuovo videogioco. 
+  Il form deve prendere in input un nome e la compagnia del videogioco. 
+  Il codice deve essere generato automaticamente lato backend all'interno di un'API 
+  Flask creata appositamente per aggiungere il videogioco nel file videogames.csv
+-->
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flask React SPA</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19?dev",
+        "react-dom/client": "https://esm.sh/react-dom@19/client?dev",
+        "react-router-dom": "https://esm.sh/react-router-dom@7?dev",
+        "react-router": "https://esm.sh/react-router@7?dev"
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-type="module">
+    import React from "react";
+    import { createRoot } from "react-dom/client";
+    import { BrowserRouter, Routes, Route, Navigate, Link, useParams } from "react-router-dom";
+
+    const { useState, useEffect } = React;
+
+    {/*
+      * ESERCIZIO #7
+      * Creare un componente React VideogameList
+      */}
+    function VideogameList() {
+      const [videogames, setVideogames] = useState([]);
+      const [loading, setLoading] = useState(true);
+      const [formData, setFormData] = useState({name: '', company: ''});
+
+      const fetchVideogames = async () => {
+        try {
+          const response = await fetch(`/api/videogames`);
+          const data = await response.json();
+          setVideogames(data);
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          console.error('Errore nel caricamento:', error);
+        }
+      };
+
+      useEffect(() => { fetchVideogames(); }, []);
+
+      // Gestisce il cambiamento dei campi del form
+      const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+          ...prev,
+          [name]: value
+        }));
+      };
+
+      // Gestisce l'invio del form per aggiungere un videogame
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+          const response = await fetch(`/api/video/add_videogame`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json', // Specifica che invii JSON
+            },
+            body: JSON.stringify(formData) // Invia i dati del form!
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            alert("Videogame aggiunto!");
+            setFormData({ name: '', company: '' }); // Reset del form
+            fetchVideogames();
+          } else {
+            alert("Errore: " + result.message);
+          }
+        } catch (error) {
+          console.error("Errore durante l'aggiunta del videogame:", error);
+        }
+      };
+
+      if (loading) return <div>Caricamento dei videogames...</div>;
+
+      {/*
+        * ESERCIZIO #7
+        * visualizzare l'elenco dei videogiochi in una tabella che mostri 
+        * il codice e il nome di ogni videogioco. 
+        */}
+      return (
+        <div>
+          <h2>Elenco dei videogames disponibili | <a href="{{ url_for('index') }}">Home</a></h2>
+
+          { videogames.length > 0 ? (
+            <div>
+              {/*
+                * ESERCIZIO #8
+                * inserire sopra la tabella un form per l'aggiunta di un nuovo videogioco. 
+                * Il form deve prendere in input un nome e la compagnia del videogioco. 
+                */}
+              <div>
+                <form onSubmit={handleSubmit}>
+                  <div>
+                    <label>Nome</label>
+                    <input type="text" name="name" value={formData.name} onChange={handleInputChange} required />
+                  </div>
+
+                  <div>
+                    <label className="form-label">Compagnia</label>
+                    <input type="text" name="company" value={formData.company} onChange={handleInputChange} required />
+                  </div>
+
+                  <button type="submit">Aggiungi videogioco</button>
+                </form>
+              </div>
+
+              <table>
+                <thead>
+                  <tr>
+                    <th>Codice</th>
+                    <th>Nome</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  { videogames.map((videogame) => (
+                      <tr key={videogame.code}>
+                          <td>{ videogame.code }</td>
+                          <td>{ videogame.name }</td>
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </table>
+            </div>
+            ) : (<div>Nessun videogame trovato</div>)
+          }
+        </div>
+      );
+    };
+
+    function App() {
+      return (
+        <BrowserRouter basename="/react">
+          <Routes>
+            <Route path="/videogames" element={<VideogameList />} />
+            <Route path="/" element={<Navigate to="/videogames" replace />} />
+          </Routes>
+        </BrowserRouter>
+      );
+    }
+
+    const root = createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

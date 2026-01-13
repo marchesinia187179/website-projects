@@ -1,0 +1,68 @@
+<!--
+    ESERCIZIO #3
+    Deve mostrare i dettagli del videogioco corrispondente, formattati in modo chiaro e leggibile. 
+    Nella pagina di dettaglio devono essere presenti: 
+    - Il nome del videogioco, 
+    - la lista delle valutazioni, 
+    - un pulsante per tornare a index.html.
+-->
+{% extends "base.html" %}
+
+{% block title %}Dettagli videogame{% endblock %}
+
+{% block content %}
+<button>
+    <a href="{{ url_for('index') }}">Torna alla lista</a>
+</button>
+
+<h2>Dettagli videogame</h2>
+
+{% if videogame %}
+    <div>
+        <div class="datails">
+            <div>
+                <p></span><strong>Codice:</strong> {{ videogame.code }}</p>
+            </div>
+            <div>
+                <p></span><strong>Nome:</strong> {{ videogame.name }}</p>
+            </div>
+            <div>
+                <p><strong>Compagnia:</strong> {{ videogame.company }}</p>
+            </div>
+        </div>
+        <div>
+            <h3>Valutazioni</h3>
+
+            <!--
+                ESERCIZIO #4
+                Nella pagina del videogioco, aggiungere due campi di input username e valutazione. 
+                La valutazione deve essere un campo numerico i cui valori possono andare da 1 a 10. 
+                Inserire anche un pulsante "Aggiungi". 
+                
+                Il pulsante deve chiamare un'API Flask tramite il metodo POST 
+                per aggiungere una nuova valutazione al videogioco. 
+                Il nuovo dato deve essere aggiunto al file ratings.csv, associato al codice del videogioco. 
+            -->
+            <form method="POST" action="{{ url_for('add_rating', game_code=videogame.code) }}">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+                
+                <label for="valutazione">Rating</label>
+                <input type="number" id="valutazione" name="valutazione" min="1" max="10" required>
+                <button type="submit">Aggiungi</button>
+            </form>
+
+            <ol type="1">
+            {% for rating in ratings %}
+            <li><strong>{{ rating.username }}:</strong> {{ rating.rating }}
+            </li>
+            {% endfor %}
+            </ol>
+        </div>
+    </div>
+{% else %}
+    <div>
+        <h2>Dettagli videogame non disponibili</h2>
+    </div>
+{% endif %}
+{% endblock %}

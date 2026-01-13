@@ -1,0 +1,34 @@
+table {
+    border: solid;
+    border-width: 1px;
+    border-color: black;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+thead {
+    background-color: greenyellow;
+}
+
+th {
+    padding: 10px;
+}
+
+td:hover {
+    background-color: lightgray;
+}
+
+.datails {
+    border: solid;
+    border-width: 1px;
+    border-color: black;
+    border-radius: 12px;
+    padding: 10px;
+    width: 400px;
+    background-color: greenyellow;
+}
+
+button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
