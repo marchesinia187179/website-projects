@@ -1,8 +1,8 @@
 # Final Test 05
 
-![Page 1]()
-![Page 2]()
-![Page 3]()
+![Page 1](https://github.com/marchesinia187179/website-projects/blob/2dd931ce9dc3dde90020c4f316da1d8bfad5128c/FinalTest05/images/page1.png)
+![Page 2](https://github.com/marchesinia187179/website-projects/blob/2dd931ce9dc3dde90020c4f316da1d8bfad5128c/FinalTest05/images/page2.png)
+![Page 3](https://github.com/marchesinia187179/website-projects/blob/2dd931ce9dc3dde90020c4f316da1d8bfad5128c/FinalTest05/images/react1.png)
 
 ## Description
 1. Write two functions to read and return all videogames from the `videogames.csv` file and all ratings from the `ratings.csv` file. The `videogames.csv` file contains columns for code, name, and company, while `ratings.csv` includes username, code, and rating. These functions must be called in `app.py`, and file loading must be implemented in a single part of the code.
