@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Books Page{% endblock %}
+
+{% block content %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Height</th>
+                <th>Publisher</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>{{ book.Title }}</td>
+                <td>{{ book.Author }}</td>
+                <td>{{ book.Genre }}</td>
+                <td>{{ book.Height }}</td>
+                <td>{{ book.Publisher }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

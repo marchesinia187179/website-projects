@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Books Page{% endblock %}
+
+{% block content %}
+    <h1>Books</h1>
+    <h1>Add a Book</h1>
+    <form id="bookForm" onsubmit="submitForm(event)">
+        <label for="title">Title:</label>
+        <input type="text" id="Title" name="Title" required><br><br>
+
+        <label for="author">Author:</label>
+        <input type="text" id="Author" name="Author" required>
+
+        <button type="submit">Add Book</button>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Height</th>
+                <th>Publisher</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>{{ book.Title }}</td>
+                <td>{{ book.Author }}</td>
+                <td>{{ book.Genre }}</td>
+                <td>{{ book.Height }}</td>
+                <td>{{ book.Publisher }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        async function submitForm(event) {
+            event.preventDefault();     // Prevent form from refreshing the Page
+
+            const Title = document.getElementById('Title').value;
+            const Author = document.getElementById('Author').value;
+
+            const response = await fetch('/api/books', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({Title, Author})
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                alert(`Error: ${result.error}`);
+            }
+
+            event.target.reset();     // Empty the form fields
+
+            // Dynamically add row to table without reloading
+            const tableBody = document.querySelector('table tbody');
+            const newRow = tableBody.insertRow();
+            newRow.innerHTML = `
+                <td>${result.book.Title}</td>
+                <td>${result.book.Author}</td>
+                <td>${result.book.Genre || ''}</td>
+                <td>${result.book.Height || ''}</td>
+                <td>${result.book.Publisher || ''}</td>
+            `;
+
+            alert('Book added successfully!');
+        }
+    </script>
+{% endblock %}
