@@ -1,0 +1,231 @@
+<!--
+  ESERCIZIO #6
+  Tutte le route impostate con React devono seguire il prefisso /react, 
+  ad esempio /react/questions, /react/question/id, ecc
+
+  ESERCIZIO #7
+  Creare un componente React QuestionList per visualizzare 
+  l'elenco di tutte le possibili domande in una tabella che mostri 
+  - il codice e 
+  - l’enunciato di ogni domanda. 
+  
+  La componente deve contenere un bottone “Aggiungi domanda”.
+  Associare questo componente alla route /react.
+
+  ESERCIZIO #8
+  Il bottone aggiungi domanda deve portare alla visualizzazione di un componente 
+  NewQuestion, contenente un form per aggiungere una nuova domanda. Il form deve 
+  permettere l’inserimento dell’enunciato della domanda, le quattro possibili risposte e 
+  specificare quali risposte sono giuste. Aggiungere la nuova domanda nel file 
+  questions.csv. La componente deve stare sotto la route /react/new_questions.
+-->
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flask React SPA</title>
+
+  <!-- Import map per risolvere i moduli -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19?dev",
+        "react-dom/client": "https://esm.sh/react-dom@19/client?dev",
+        "react-router-dom": "https://esm.sh/react-router-dom@7?dev",
+        "react-router": "https://esm.sh/react-router@7?dev"
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-type="module">
+    import React from "react";
+    import { createRoot } from "react-dom/client";
+    import {
+      BrowserRouter, Routes, Route,
+      Link, useParams, Navigate
+    } from "react-router-dom";
+
+    const { useState, useEffect } = React;
+
+    function QuestionList() {
+      const [questions, setQuestions] = useState([]);
+      const [loading, setLoading] = useState(true);
+
+      const fetchQuestions = async () => {
+        try {
+          const response = await fetch(`/api/questions`);
+          const data = await response.json();
+          setQuestions(data);
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          console.error('Errore nel caricamento delle domande:', error);
+        }
+      };
+
+      useEffect(() => { fetchQuestions(); }, []);
+
+      if (loading) return <div>Caricamento delle domande...</div>;
+
+      return (
+        <div>
+          <h2>Elenco delle domande disponibili | <a href="{{ url_for('index') }}">Home</a></h2>
+
+          <button><Link to="/new_questions">Aggiungi domanda</Link></button>
+
+          { questions.length > 0 ? (
+            <div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Codice</th>
+                    <th>Enunciato</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  { questions.map((question) => (
+                      <tr key={question.question_code}>
+                          <td>{ question.question_code }</td>
+                          <td>{ question.statement }</td>
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </table>
+            </div>
+            ) : (
+              <div>
+                Nessuna domanda trovata
+                </div>
+            )
+          }
+        </div>
+      );
+    }
+
+    function NewQuestion() {
+      const [formData, setFormData] = useState({
+        enunciato: '', 
+        risposta1: '', risposta2: '', risposta3: '', risposta4: '',
+        risposta1corretta: '', risposta2corretta: '', risposta3corretta: '', risposta4corretta: ''
+      });
+
+      // Gestisce il cambiamento dei campi del form
+      const handleInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        
+        // Se è una checkbox
+        const finalValue = type === 'checkbox' ? (checked ? value : '') : value;
+
+        setFormData(prev => ({
+          ...prev,
+          [name]: finalValue
+        }));
+      };
+
+      // Gestisce l'invio del form per aggiungere un videogame
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+          const response = await fetch(`/api/add_question`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json', // Specifica che invii JSON
+            },
+            body: JSON.stringify(formData) // Invia i dati del form!
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            alert("Domanda aggiunta!");
+            setFormData({ 
+              enunciato: '', 
+              risposta1: '', risposta2: '', risposta3: '', risposta4: '',
+              risposta1corretta: '', risposta2corretta: '', risposta3corretta: '', risposta4corretta: ''
+            }); // Reset del form
+          } else {
+            alert("Errore: " + result.message);
+          }
+        } catch (error) {
+          console.error("Errore durante l'aggiunta della domanda:", error);
+        }
+      };
+
+      return (
+        <div>
+          <button><Link to="/">Torna indietro</Link></button>
+
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="enunciato">Enunciato:</label>
+              <input type="text" name="enunciato" value={formData.enunciato} onChange={handleInputChange} required />
+            </div>
+
+            <div>
+              <label htmlFor="risposta1">Risposta 1:</label>
+              <input type="text" name="risposta1" value={formData.risposta1} onChange={handleInputChange} required />
+            </div>
+              
+            <div>
+              <label htmlFor="risposta2">Risposta 2:</label>
+              <input type="text" name="risposta2" value={formData.risposta2} onChange={handleInputChange} required />
+            </div>
+
+            <div>
+              <label htmlFor="risposta3">Risposta 3:</label>
+              <input type="text" name="risposta3" value={formData.risposta3} onChange={handleInputChange} required />
+            </div>
+
+            <div>
+              <label htmlFor="risposta4">Risposta 4:</label>
+              <input type="text" name="risposta4" value={formData.risposta4} onChange={handleInputChange} required />
+            </div>
+            
+            <div>
+              <label htmlFor="rispostecorrette">Risposte corrette:</label><br/>
+
+              <label htmlFor="risposta1corretta">1</label>
+              <input type="checkbox" name="risposta1corretta" value="1" checked={formData.risposta1corretta === "1"} onChange={handleInputChange} />
+
+              <label htmlFor="risposta2corretta">2</label>
+              <input type="checkbox" name="risposta2corretta" value="2" checked={formData.risposta2corretta === "2"} onChange={handleInputChange} />
+              
+              <label htmlFor="risposta3corretta">3</label>
+              <input type="checkbox" name="risposta3corretta" value="3" checked={formData.risposta3corretta === "3"} onChange={handleInputChange} />
+              
+              <label htmlFor="risposta4-corretta">4</label>
+              <input type="checkbox" name="risposta4corretta" value="4" checked={formData.risposta4corretta === "4"} onChange={handleInputChange} />
+            </div>
+
+            <div>
+              <button type="submit">Aggiungi domanda</button>
+            </div>
+          </form>
+        </div>
+      );
+    }
+
+    function App() {
+      return (
+        <BrowserRouter basename="/react">
+          <Routes>
+            <Route path="/" element={<QuestionList />} />
+            <Route path="/new_questions" element={<NewQuestion />} />
+          </Routes>
+        </BrowserRouter>
+      );
+    }
+
+    const root = createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

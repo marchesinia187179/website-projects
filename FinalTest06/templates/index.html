@@ -1,0 +1,77 @@
+<!--
+    ESERCIZIO #2
+    Deve estendere il template di base. 
+    Il template deve mostrare una tabella con l'elenco di tutti i quiz 
+    visualizzando il codice, il nome del quiz e il numero di domande.
+
+    ESERCIZIO #3
+    Nella pagina index.html, sopra la tabella deve essere presente un form con 
+    due campi e un bottone per aggiungere un nuovo quiz. 
+    Il form deve contenere due campi di input, 
+    - uno per il nome del quiz e 
+    - l’altro per il numero di domande che dovranno essere presenti nel quiz.
+
+    Una volta premuto il bottone, 
+    - l’applicazione dovrà selezionare automaticamente le domande tra quelle disponibili, 
+    senza ripetizioni. 
+    - Inserire i dati del nuovo quiz nel file quizzies.csv
+    
+    Nel caso il numero di domande inserito fosse più grande del numero di domande presenti, 
+    - dovrà essere mandato un alert di errore. 
+
+    ESERCIZIO #4
+    Rendere cliccabile le righe della tabella. 
+    Quando un utente clicca su un videogioco, 
+    - reindirizzarlo a una pagina dedicata /quiz/<quiz_code> che mostri i dettagli del quiz. 
+-->
+{% extends "base.html" %}
+
+{% block title %}Videogames{% endblock %}
+
+{% block content %}
+<h2>Elenco dei quiz disponibili | <a href="{{ url_for('react_app') }}">React</a></h2>
+
+{% if quizzies %}
+    <form method="POST" action="{{ url_for('add_quiz') }}">
+        <label for="quiz-name">Name</label>
+        <input type="text" id="quiz-name" name="quiz-name" required>
+        
+        <label for="question-count">Numero di domande</label>
+        <input type="number" id="question-count" name="question-count" min="1" required>
+        <button type="submit">Aggiungi quiz</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Codice</th>
+                <th>Nome</th>
+                <th>Domande</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for quiz in quizzies %}
+            <tr>
+                <td>
+                    <a <a href="{{ url_for('quiz_detail', quiz_code=quiz.quiz_code) }}">
+                        {{ quiz.quiz_code }}
+                    </a>
+                </td>
+                <td>{{ quiz.name }}</td>
+                <td>{{ quiz.question_list }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div>
+        <h2>Nessun quiz disponibile</h2>
+    </div>
+{% endif %}
+
+{% if alert %}
+    <script>
+        alert("{{ alert }}");
+    </script>
+{% endif %}
+{% endblock %}

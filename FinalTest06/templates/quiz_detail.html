@@ -1,0 +1,44 @@
+<!--
+    ESERCIZIO #4
+    Dovranno essere visualizzate tutte le domande presenti nel quiz, 
+    per ognuna delle quali dovranno essere mostrate le seguenti proprietà: 
+    - l’enunciato della domanda e 
+    - le quattro risposte evidenziando quali sono le risposte corrette. 
+    Nella pagina dovrà anche essere presente un pulsante per tornare a index.html
+-->
+{% extends "base.html" %}
+
+{% block title %}Dettagli quiz{% endblock %}
+
+{% block content %}
+<button>
+    <a href="{{ url_for('index') }}">Torna ai quiz</a>
+</button>
+
+<h2>Dettagli quiz</h2>
+
+{% if quiz %}
+    {% if questions %}
+        {% for question in questions %}
+            <div>
+                <p><strong>{{ question.statement }}</strong></p>
+                <ol type="1">
+                    <li>{{ question.answer_1 }}</li>
+                    <li>{{ question.answer_2 }}</li>
+                    <li>{{ question.answer_3 }}</li>
+                    <li>{{ question.answer_4 }}</li>
+                </ol>
+                <p><strong>Risposta:</strong> {{ question.correct_answers }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div>
+            <h2>Domande non disponibili</h2>
+        </div>
+    {% endif %}
+{% else %}
+    <div>
+        <h2>Dettagli quiz non disponibili</h2>
+    </div>
+{% endif %}
+{% endblock %}
