@@ -1,5 +1,11 @@
 # All in one
 
+![Page 1](https://github.com/marchesinia187179/website-projects/blob/909425751d69d84ea18b98e1934669f02ef0d0a4/Lab07/images/page1.png)
+![Page 2](https://github.com/marchesinia187179/website-projects/blob/909425751d69d84ea18b98e1934669f02ef0d0a4/Lab07/images/page2.png)
+![Page 3](https://github.com/marchesinia187179/website-projects/blob/909425751d69d84ea18b98e1934669f02ef0d0a4/Lab07/images/page3.png)
+![Page 4](https://github.com/marchesinia187179/website-projects/blob/909425751d69d84ea18b98e1934669f02ef0d0a4/Lab07/images/page4.png)
+![Page 5](https://github.com/marchesinia187179/website-projects/blob/909425751d69d84ea18b98e1934669f02ef0d0a4/Lab07/images/page5.png)
+
 ### Exercise 1 - HTML Static
 Creation of the basic structure of a Flask application with static HTML pages.
 
