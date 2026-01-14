@@ -1,0 +1,74 @@
+<!--
+    ESERCIZIO #3
+    In questa pagina deve essere presente un riquadro con i dettagli del corso: 
+    - nome del corso, 
+    - nome istruttore,
+    - giorno della settimana, 
+    - orario, 
+    - posti totali 
+    - e posti rimasti liberi. 
+    
+    Differenziare la formattazione dei nomi dei campi dai loro valori.
+
+    ESERCIZIO #4
+    Nella pagina descritta al punto 3, sotto i dettagli del corso deve essere
+    presente un form per prenotarsi al suddetto corso. 
+    Deve essere possibile inserire
+    - nome e cognome del titolare della prenotazione. 
+
+    L’id della prenotazione deve essere generato automaticamente. 
+    I dati della nuova prenotazione devono essere scritti nel file bookings.csv
+
+    La stilizzazione deve prevedere una spaziatura tra i campi che li renda differenziabili.
+    
+    N.B. Il form deve essere visibile solo se ci sono ancora posti disponibili, altrimenti
+    al suo posto deve comparire il messaggio “Nessun posto disponibile”.
+-->
+{% extends "base.html" %}
+
+{% block title %}Dettagli corso{% endblock %}
+
+{% block content %}
+<button>
+    <a href="{{ url_for('index') }}">Torna ai corsi</a>
+</button>
+
+<h2>Dettagli corso</h2>
+
+{% if course %}
+    <div>
+        <p><strong>Nome del corso:</strong> {{ course.name }}</p>
+        <p><strong>Nome istruttore:</strong> {{ course.instructor_name }}</p>
+        <p><strong>Giorno della settimana:</strong> {{ course.day_of_the_week }}</p>
+        <p><strong>Orario</strong> {{ course.hours }}</p>
+        <p><strong>Posti totali:</strong> {{ course.total_places }}</p>
+        <p><strong>Posti rimasti:</strong> {{ course.total_free_places }}</p>
+    </div>
+
+    <h2>Prenota corso</h2>
+
+    {% if course.total_free_places %}
+        <form method="POST" action="{{ url_for('book_course', course_id=course.id) }}">
+            <div>
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+
+            <div>
+                <label for="cognome">Cognome</label>
+                <input type="text" id="cognome" name="cognome" required>
+            </div>
+            
+            <button type="submit">Prenota corso</button>
+        </form>
+    {% else %}
+        <div>
+            <h2>Nessun posto disponibile</h2>
+        </div>
+    {% endif %}
+{% else %}
+    <div>
+        <h2>Dettagli quiz non disponibili</h2>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,55 @@
+<!--
+    ESERCIZIO #2
+    Tabella contenente l’elenco dei corsi, se presenti. 
+    Su ciascuna riga devono comparire i seguenti dati: 
+    - nome del corso, 
+    - nome istruttore, 
+    - giorno della settimana
+    - e orario.
+    
+    Se il file è vuoto o mancante, mostrare il messaggio "Nessun corso disponibile".
+
+    È richiesta la seguente stilizzazione:
+    − uno sfondo colorato (colore a vostra scelta)
+    − l'applicazione di bordi al contenitore e alle righe della tabella.
+    − una formattazione diversa tra i nomi delle colonne della tabella e il corpo,
+    sia in termini di colore che in termini di font-weight.
+
+    ESERCIZIO #3
+    Rendere cliccabile ogni riga della tabella in modo tale che reindirizzi alla
+    seguente route dinamica: /course/<course_id>.
+-->
+{% extends "base.html" %}
+
+{% block title %}Corsi{% endblock %}
+
+{% block content %}
+<h2>Elenco dei corsi disponibili | <a href="{{ url_for('react_app') }}">React</a></h2>
+
+{% if courses %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nome del corso</th>
+                <th>Nome istruttore</th>
+                <th>Giorno della settimana</th>
+                <th>Orario</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+            <tr>
+                <td><a href="{{ url_for('course_detail', course_id=course.id) }}">{{ course.name }}</a></td>
+                <td><a href="{{ url_for('course_detail', course_id=course.id) }}">{{ course.instructor_name }}</a></td>
+                <td><a href="{{ url_for('course_detail', course_id=course.id) }}">{{ course.day_of_the_week }}</a></td>
+                <td><a href="{{ url_for('course_detail', course_id=course.id) }}">{{ course.hours }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div>
+        <h2>Nessun corso disponibile</h2>
+    </div>
+{% endif %}
+{% endblock %}

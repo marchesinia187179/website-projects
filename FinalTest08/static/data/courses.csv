@@ -1,0 +1,8 @@
+id,name,instructor_name,day_of_the_week,hours,total_places
+1,Yoga Base,Anna Montelupo,Lunedì,18:00-19:00,20
+2,Pilates,Marco Valdieri,Martedì,19:00-20:00,15
+3,CrossFit,Luca Ferretti,Mercoledì,17:30-18:30,12
+4,Zumba,Sara Bellanotte,Venerdì,18:00-19:00,25
+5,Spinning,Giovanni Albarelli,Govedì,18:30-19:30,10
+6,Functional Training,Chiara Rinalducci,Mercoledì,19:00-20:00,18
+7,Boxe Fitness,Alessandro Piergentili,Lunedì,20:00-21:00,14

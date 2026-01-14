@@ -1,0 +1,252 @@
+<!--
+  ESERCIZIO #6
+  Nel template index_react.html creare una componente React CourseList
+  che renderizzi una tabella dei corsi analoga quella del punto 2, 
+  che mostri anche i posti totali. 
+  
+  La componente deve essere associata a una route react /react/courses. 
+  Sopra la tabella deve essere inserito un bottone con scritto “Aggiungi nuovo corso”.
+
+  ESERCIZIO #7
+  Al click del bottone, l’utente deve essere reindirizzato alla seguente route:
+  /react/add_course. A tale route deve essere associata la componente
+  AddCourseForm, la quale deve renderizzare un form per l’inserimento di un nuovo
+  corso. 
+  
+  In caso di successo, l’id del nuovo corso deve essere generato lato
+  backend, i dati salvati nel file courses.csv e sotto il form deve comparire un
+  messaggio di conferma in verde. In caso di errore, deve essere mostrato un
+  messaggio di errore in rosso.
+-->
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Prenotazioni palestra - React SPA</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@19?dev",
+          "react-dom/client": "https://esm.sh/react-dom@19/client?dev",
+          "react-router-dom": "https://esm.sh/react-router-dom@7?dev",
+          "react-router": "https://esm.sh/react-router@7?dev"
+        }
+      }
+    </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+      import React, { useState, useEffect } from "react";
+      import { createRoot } from "react-dom/client";
+      import {
+        BrowserRouter,
+        Routes,
+        Route,
+        Link,
+        useParams,
+        useNavigate
+      } from "react-router-dom";
+
+      function CourseList() {
+        const [courses, setCourses] = useState([]);
+        const [loading, setLoading] = useState(true);
+
+        const fetchCourses = async () => {
+          try {
+            const response = await fetch(`/api/courses`);
+            const data = await response.json();
+            setCourses(data);
+            setLoading(false);
+          } catch (error) {
+            setLoading(false);
+            console.error('Errore nel caricamento dei corsi:', error);
+          }
+        };
+
+        useEffect(() => { fetchCourses(); }, []);
+
+        if (loading) return <div>Caricamento dei corsi...</div>;
+
+        return (
+          <div>
+            <h2>Elenco dei corsi disponibili | <a href="{{ url_for('index') }}">Home</a></h2>
+
+            <button><Link to="/add_course">Aggiungi nuovo corso</Link></button>
+
+            { courses.length > 0 ? (
+              <div>
+                <table>
+                  <thead>
+                      <tr>
+                          <th>Nome del corso</th>
+                          <th>Nome istruttore</th>
+                          <th>Giorno della settimana</th>
+                          <th>Orario</th>
+                          <th>Posti totali</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    { courses.map((course) => (
+                        <tr key={course.id}>
+                            <td>{ course.name }</td>
+                            <td>{ course.instructor_name }</td>
+                            <td>{ course.day_of_the_week }</td>
+                            <td>{ course.hours }</td>
+                            <td>{ course.total_places }</td>
+                        </tr>
+                      ))
+                    }
+                  </tbody>
+                </table>
+              </div>
+              ) : (
+                <div>
+                  <h2>Nessun corso disponibile</h2>
+                </div>
+              )
+            }
+          </div>
+        );
+      }
+
+      function AddCourseForm() {
+        const [formData, setFormData] = useState({
+          name: '',
+          instructor: '',
+          day1: '', day2: '', day3: '', day4: '', day5: '', day6: '', day7: '',
+          hourstart: '', hourend: '',
+          places: ''
+        });
+
+        // Gestisce il cambiamento dei campi del form
+        const handleInputChange = (e) => {
+          const { name, value, type, checked } = e.target;
+        
+          // Se è una checkbox
+          const finalValue = type === 'checkbox' ? (checked ? value : '') : value;
+
+          setFormData(prev => ({
+            ...prev,
+            [name]: finalValue
+          }));
+        };
+
+        // Gestisce l'invio del form per aggiungere un nuovo corso
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+
+          try {
+            const response = await fetch(`/api/add_corse`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json', // Specifica che invii JSON
+              },
+              body: JSON.stringify(formData) // Invia i dati del form!
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              alert("Corso aggiunto!");
+              setFormData({ 
+                name: '',
+                instructor: '',
+                day1: '', day2: '', day3: '', day4: '', day5: '', day6: '', day7: '',
+                hourstart: '', hourend: '',
+                places: ''
+              }); // Reset del form
+            } else {
+              alert("Errore: " + result.message);
+            }
+          } catch (error) {
+            console.error("Errore durante l'aggiunta del corso:", error);
+          }
+        };
+
+        return (
+          <div>
+            <button><Link to="/">Torna indietro</Link></button>
+
+            <form onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="name">Nome del corso:</label>
+                <input type="text" name="name" value={formData.name} onChange={handleInputChange} required />
+              </div>
+
+              <div>
+                <label htmlFor="instructor">Istruttore:</label>
+                <input type="text" name="instructor" value={formData.instructor} onChange={handleInputChange} required />
+              </div>
+
+              <div>
+                <label htmlFor="day">Giorno:</label><br />
+                  <input type="checkbox" name="day1" value="Lunedì" checked={formData.day1 === "Lunedì"} onChange={handleInputChange} />
+                  <label for="lunedì">Lunedì</label><br />
+                  
+                  <input type="checkbox" name="day2" value="Martedì" checked={formData.day2 === "Martedì"} onChange={handleInputChange} />
+                  <label for="martedì">Martedì</label><br />
+                  
+                  <input type="checkbox" name="day3" value="Mercoledì" checked={formData.day3 === "Mercoledì"} onChange={handleInputChange} />
+                  <label for="mercoledì">Mercoledì</label><br />
+                  
+                  <input type="checkbox" name="day4" value="Giovedì" checked={formData.day4 === "Giovedì"} onChange={handleInputChange} />
+                  <label for="giovedì">Giovedì</label><br />
+                  
+                  <input type="checkbox" name="day5" value="Venerdì" checked={formData.day5 === "Venerdì"} onChange={handleInputChange} />
+                  <label for="venerdì">Venerdì</label><br />
+                  
+                  <input type="checkbox" name="day6" value="Sabato" checked={formData.day6 === "Sabato"} onChange={handleInputChange} />
+                  <label for="sabato">Sabato</label><br />
+
+                  <input type="checkbox" name="day7" value="Domenica" checked={formData.day7 === "Domenica"} onChange={handleInputChange} />
+                  <label for="domenica">Domenica</label><br />
+                </div>
+              <div>
+                <label htmlFor="hourstart">Ora di inizio:</label>
+                <input type="time" name="hourstart" value={formData.hourstart} onChange={handleInputChange} required />
+              </div>
+
+              <div>
+                <label htmlFor="hourend">Ora di fine:</label>
+                <input type="time" name="hourend" value={formData.hourend} onChange={handleInputChange} min={formData.hourstart} required />
+              </div>
+
+              <div>
+                <label htmlFor="places">Posti:</label>
+                <input type="number" name="places" value={formData.places} onChange={handleInputChange} min="1" required />
+              </div>
+
+              <div>
+                <button type="submit">Aggiungi corso</button>
+              </div>
+
+            </form>
+          </div>
+        );
+      }
+      
+      function App() {
+        return (
+          <BrowserRouter basename="/react">
+            <Routes>
+              <Route path="/" element={<CourseList />} />
+              <Route path="/add_course" element={<AddCourseForm />} />
+            </Routes>
+          </BrowserRouter>
+        );
+      }
+
+      const root = createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
