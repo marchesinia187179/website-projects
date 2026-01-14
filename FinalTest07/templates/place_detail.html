@@ -1,0 +1,48 @@
+<!-- ESERCIZIO #3 - Template per pagina dedicata di ogni luogo -->
+{% extends "base.html" %}
+
+{% block title %}{{ place.name if place else 'Luogo non trovato' }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if place %}
+    <div class="place-detail">
+        <div class="place-image">
+            <img src="{{ place.image_link }}" alt="{{ place.name }}" onerror="this.src='/static/placeholder.jpg'">
+        </div>
+
+        <div class="place-info">
+            <h2>{{ place.name }}</h2>
+
+            <div class="info-box">
+                <div class="info-item">
+                    <strong>Nome:</strong> {{ place.name }}
+                </div>
+                <div class="info-item">
+                    <strong>Comune:</strong> {{ place.municipality }}
+                </div>
+                <div class="info-item">
+                    <strong>Categoria:</strong> {{ place.category }}
+                </div>
+                <div class="info-item">
+                    <strong>Prezzo di visita:</strong> €{{ place.price }}
+                </div>
+                <div class="info-item">
+                    <strong>Numero di itinerari:</strong> {{ place.itinerary_count }}
+                </div>
+            </div>
+
+            <div class="actions">
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">Torna alla lista</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="error">
+        <h2>Luogo non trovato</h2>
+        <p>Il luogo richiesto non esiste.</p>
+        <a href="{{ url_for('index') }}" class="btn btn-primary">Torna alla lista</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

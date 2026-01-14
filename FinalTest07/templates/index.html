@@ -1,0 +1,36 @@
+<!-- ESERCIZIO #2 - Template index che estende base -->
+{% extends "base.html" %}
+
+{% block title %}Home - Gestione Itinerari{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Luoghi Visitabili</h2>
+
+    <!-- ESERCIZIO #4 - Bottone per aggiungere luogo -->
+    <div class="actions">
+        <a href="{{ url_for('add_place_form') }}" class="btn btn-primary">Aggiungi Luogo</a>
+    </div>
+
+    <!-- ESERCIZIO #2 - Tabella con tutti i luoghi -->
+    <table class="places-table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Comune</th>
+                <th>Categoria</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for place in places %}
+            <!-- ESERCIZIO #3 - Righe cliccabili -->
+            <tr class="clickable-row" onclick="window.location.href='{{ url_for('place_detail', place_id=place.place_id) }}'">
+                <td>{{ place.name }}</td>
+                <td>{{ place.municipality }}</td>
+                <td>{{ place.category }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

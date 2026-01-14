@@ -1,0 +1,251 @@
+<!-- ESERCIZIO #6 - Template per React SPA -->
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-router-dom@5.2.0/umd/react-router-dom.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { BrowserRouter: Router, Route, Switch, Link } = ReactRouterDOM;
+        
+        // ESERCIZIO #7 - Componente ItineraryList
+        function ItineraryList() {
+            const [itineraries, setItineraries] = useState([]);
+            const [places, setPlaces] = useState([]);
+            
+            useEffect(() => {
+                // Carica itinerari
+                fetch('/api/itineraries')
+                    .then(response => response.json())
+                    .then(data => setItineraries(data))
+                    .catch(error => console.error('Errore nel caricamento itinerari:', error));
+                
+                // Carica luoghi
+                fetch('/api/places')
+                    .then(response => response.json())
+                    .then(data => setPlaces(data))
+                    .catch(error => console.error('Errore nel caricamento luoghi:', error));
+            }, []);
+            
+            const calculateItineraryPrice = (itinerary) => {
+                if (!itinerary.place_list || !places.length) return 0;
+                
+                let total = 0;
+                itinerary.place_list.forEach(placeId => {
+                    const place = places.find(p => p.place_id === placeId);
+                    if (place) {
+                        total += parseFloat(place.price) || 0;
+                    }
+                });
+                return total.toFixed(2);
+            };
+            
+            return (
+                <div className="container">
+                    <h2>Lista Itinerari</h2>
+                    
+                    <div className="actions">
+                        <Link to="/react/new_itinerary" className="btn btn-primary">
+                            Crea Itinerario
+                        </Link>
+                    </div>
+                    
+                    <table className="itineraries-table">
+                        <thead>
+                            <tr>
+                                <th>Nome Itinerario</th>
+                                <th>Durata</th>
+                                <th>Prezzo (€)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {itineraries.map(itinerary => (
+                                <tr key={itinerary.itinerary_id}>
+                                    <td>{itinerary.name}</td>
+                                    <td>{itinerary.duration}</td>
+                                    <td>€{calculateItineraryPrice(itinerary)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            );
+        }
+        
+        // ESERCIZIO #8 - Componente NewItinerary
+        function NewItinerary() {
+            const [places, setPlaces] = useState([]);
+            const [formData, setFormData] = useState({
+                name: '',
+                duration: '',
+                selectedPlaces: []
+            });
+            const [loading, setLoading] = useState(false);
+            
+            useEffect(() => {
+                fetch('/api/places')
+                    .then(response => response.json())
+                    .then(data => setPlaces(data))
+                    .catch(error => console.error('Errore nel caricamento luoghi:', error));
+            }, []);
+            
+            const handleInputChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prev => ({
+                    ...prev,
+                    [name]: value
+                }));
+            };
+            
+            const handlePlaceChange = (placeId, checked) => {
+                setFormData(prev => ({
+                    ...prev,
+                    selectedPlaces: checked 
+                        ? [...prev.selectedPlaces, placeId]
+                        : prev.selectedPlaces.filter(id => id !== placeId)
+                }));
+            };
+            
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                
+                try {
+                    const response = await fetch('/api/add_itinerary', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name: formData.name,
+                            duration: formData.duration,
+                            place_list: formData.selectedPlaces
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        alert('Itinerario creato con successo!');
+                        // Reset form
+                        setFormData({
+                            name: '',
+                            duration: '',
+                            selectedPlaces: []
+                        });
+                    } else {
+                        alert('Errore nella creazione dell\'itinerario');
+                    }
+                } catch (error) {
+                    console.error('Errore:', error);
+                    alert('Errore nella creazione dell\'itinerario');
+                } finally {
+                    setLoading(false);
+                }
+            };
+            
+            return (
+                <div className="container">
+                    <h2>Crea Nuovo Itinerario</h2>
+                    
+                    <form onSubmit={handleSubmit} className="new-itinerary-form">
+                        <div className="form-group">
+                            <label htmlFor="name">Nome Itinerario:</label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label htmlFor="duration">Durata:</label>
+                            <input
+                                type="text"
+                                id="duration"
+                                name="duration"
+                                value={formData.duration}
+                                onChange={handleInputChange}
+                                placeholder="es. 2 ore, mezza giornata"
+                                required
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label>Seleziona Luoghi:</label>
+                            <div className="places-checkbox-list">
+                                {places.map(place => (
+                                    <div key={place.place_id} className="checkbox-item">
+                                        <input
+                                            type="checkbox"
+                                            id={`place-${place.place_id}`}
+                                            checked={formData.selectedPlaces.includes(place.place_id)}
+                                            onChange={(e) => handlePlaceChange(place.place_id, e.target.checked)}
+                                        />
+                                        <label htmlFor={`place-${place.place_id}`}>
+                                            {place.name} ({place.municipality}) - €{place.price}
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        
+                        <div className="form-actions">
+                            <button type="submit" className="btn btn-primary" disabled={loading}>
+                                {loading ? 'Creando...' : 'Crea Itinerario'}
+                            </button>
+                            <Link to="/react" className="btn btn-secondary">
+                                Annulla
+                            </Link>
+                        </div>
+                    </form>
+                </div>
+            );
+        }
+        
+        // Componente principale
+        function App() {
+            return (
+                <Router>
+                    <div className="react-app">
+                        <header>
+                            <nav>
+                                <h1>React App</h1>
+                                <ul>
+                                    <li><Link to="/react">Itinerari</Link></li>
+                                    <li><a href="/">Torna alla app Flask</a></li>
+                                </ul>
+                            </nav>
+                        </header>
+                        
+                        <main>
+                            <Switch>
+                                <Route exact path="/react" component={ItineraryList} />
+                                <Route exact path="/react/new_itinerary" component={NewItinerary} />
+                            </Switch>
+                        </main>
+                        
+                        <footer>
+                            <p>&copy; 2025 Portale - React App</p>
+                        </footer>
+                    </div>
+                </Router>
+            );
+        }
+        
+        var root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(React.createElement(App, null));
+    </script>
+</body>
+</html>

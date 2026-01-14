@@ -1,0 +1,42 @@
+<!-- ESERCIZIO #4 - Template per form di aggiunta luogo -->
+{% extends "base.html" %}
+
+{% block title %}Aggiungi Luogo{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Aggiungi Nuovo Luogo</h2>
+
+    <form method="POST" class="add-place-form">
+        <div class="form-group">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="category">Categoria:</label>
+            <input type="text" id="category" name="category" required>
+        </div>
+
+        <div class="form-group">
+            <label for="municipality">Comune:</label>
+            <input type="text" id="municipality" name="municipality" required>
+        </div>
+
+        <div class="form-group">
+            <label for="image_link">Link Immagine:</label>
+            <input type="url" id="image_link" name="image_link" required>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Prezzo di visita (€):</label>
+            <input type="number" id="price" name="price" step="0.01" min="0" required>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Aggiungi Luogo</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Annulla</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
