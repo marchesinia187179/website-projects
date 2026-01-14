@@ -1,9 +1,9 @@
 # Final Test 07
 
-![Page 1]()
-![Page 2]()
-![React 1]()
-![React 2]()
+![Page 1](https://github.com/marchesinia187179/website-projects/blob/cdd90cc66081729c3b6fa4df45001971fbdd7d6b/FinalTest07/images/page1.png)
+![Page 2](https://github.com/marchesinia187179/website-projects/blob/cdd90cc66081729c3b6fa4df45001971fbdd7d6b/FinalTest07/images/page2.png)
+![React 1](https://github.com/marchesinia187179/website-projects/blob/cdd90cc66081729c3b6fa4df45001971fbdd7d6b/FinalTest07/images/react1.png)
+![React 2](https://github.com/marchesinia187179/website-projects/blob/cdd90cc66081729c3b6fa4df45001971fbdd7d6b/FinalTest07/images/react2.png)
 
 ## Description
 1. Write two functions to read and return all places from the `places.csv` file and all itineraries from the `itineraries.csv` file. The `places.csv` file contains columns for place ID, name, category, municipality, image link, and price. The `itineraries.csv` file contains the itinerary ID, name, duration, and a list of place IDs. These functions must be called in `app.py`, and file loading must be implemented in a single part of the code.
